@@ -1,8 +1,10 @@
 # roles/zookeeper/meta/main.yml
 ---
 dependencies:
-  - role: system
-  - role: java
+  - src: mjcramer.system
+    name: system
+  - src: mjcramer.java
+    name: java
 
 galaxy_info:
   author: Michael Cramer
@@ -12,10 +14,10 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-    - 16.04
-  - name: Centos
+    - zesty
+  - name: EL
     versions:
-    - 7.4
+    - 7
   galaxy_tags:
     - zookeeper
     - installer
