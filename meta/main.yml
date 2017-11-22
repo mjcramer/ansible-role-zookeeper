@@ -2,9 +2,7 @@
 ---
 dependencies:
   - src: mjcramer.system
-    name: system
   - src: mjcramer.java
-    name: java
 
 galaxy_info:
   author: Michael Cramer
