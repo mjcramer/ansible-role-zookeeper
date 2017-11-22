@@ -1,0 +1,35 @@
+###############################################################################
+# Zookeeper runtime configuration
+#
+# {{ ansible_managed }}
+#
+###############################################################################
+
+# Java version for zookeeper
+{% if java_home is defined %}
+JAVA_HOME={{ java_home }}
+{% else %}
+# JAVA_HOME=/usr/java/default
+{% endif %}
+
+# Heap options for zookeeper
+ZOOKEEPER_HEAP_OPTS="-Xms{{ zookeeper_jvm_heap_init }} -Xmx{{ zookeeper_jvm_heap_max }}"
+
+# Location of zookeeper installation
+ZOO_HOME={{ zookeeper.home_dir }}
+
+# Zookeeper service configuration
+ZOOCFGDIR={{ zookeeper.conf_dir }}
+
+# Zookeeper pid file location
+ZOOPIDFILE={{ zookeeper.run_dir }}/zookeeper.pid
+
+# Directory whence kafka shall produce logs
+ZOO_LOG_DIR={{ zookeeper.log_dir }}
+
+# Zookeeper logging configuration
+# ZOO_LOG4J_PROP=INFO,CONSOLE
+
+# Zookeeper JMX configuration
+JMXPORT=2183
+

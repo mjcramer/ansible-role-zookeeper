@@ -1,0 +1,55 @@
+# roles/zookeeper/tasks/apply.yml
+---
+- name: apply | add group
+  group:
+    name: "{{ zookeeper_group }}" 
+    system: true
+    state: present
+
+- name: apply | add user
+  user: 
+    name: "{{ zookeeper_user }}" 
+    group: "{{ zookeeper_group }}"
+    system: true
+    createhome: no
+    home: "{{ zookeeper.home_dir }}"
+    state: present
+
+- name: apply | create folders
+  file: 
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ zookeeper_user }}" 
+    group: "{{ zookeeper_group }}"
+  with_items:
+    - "{{ zookeeper.conf_dir }}"
+    - "{{ zookeeper.log_dir }}"
+    - "{{ zookeeper.lib_dir }}"
+    - "{{ zookeeper.run_dir }}"
+
+- name: apply | download archive
+  get_url:
+    url: "{{ zookeeper.remote_archive }}"
+    dest: "{{ zookeeper.local_archive }}"
+    checksum: "{{ zookeeper_download_checksum }}"
+    mode: 0644 
+    force: no
+  when: zookeeper.remote_archive | match("^http.*$")
+  tags:
+    - download
+
+- name: apply | copy from local
+  copy:
+    src: "{{ zookeeper.remote_archive }}"
+    dest: "{{ zookeeper.local_archive }}"
+  when: zookeeper.remote_archive | match("^(?!http).*$")
+
+- name: apply | unpack archive
+  unarchive: 
+    src: "{{ zookeeper.local_archive }}" 
+    dest: "{{ base_home_dir }}"
+    owner: "{{ zookeeper_user }}"
+    group: "{{ zookeeper_group }}" 
+    copy: no
+    creates: "{{ zookeeper.home_dir }}"
+

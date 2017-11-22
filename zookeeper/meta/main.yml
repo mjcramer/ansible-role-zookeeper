@@ -1,0 +1,5 @@
+# roles/zookeeper/meta/main.yml
+---
+dependencies:
+  - role: system
+  - role: java

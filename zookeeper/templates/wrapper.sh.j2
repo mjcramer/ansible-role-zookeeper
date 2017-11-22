@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -f {{ zookeeper.env_file }} ]; then
+    . {{ zookeeper.env_file }}
+fi
+
+export JAVA_HOME
+export ZOOKEEPER_HEAP_OPTS
+export ZOO_HOME
+export ZOOCFGDIR
+export ZOOPIDFILE
+export ZOO_LOG_DIR
+
+su {{ zookeeper_user }} -- {{ zookeeper.home_dir }}/bin/zkServer.sh start-foreground {{ zookeeper.conf_dir }}/zoo.cfg

@@ -1,0 +1,34 @@
+###############################################################################
+# Zookeeper systemd service configuration
+#
+# {{ ansible_managed }}
+#
+###############################################################################
+
+[Unit]
+Description=Apache Zookeeper Node
+Documentation=http://zookeeper.apache.org
+Requires=network.target
+After=network.target
+ConditionPathExists={{ zookeeper.conf_dir }}/zoo.cfg
+ConditionPathExists={{ zookeeper.lib_dir }}/myid
+ConditionPathExists={{ zookeeper.log_dir }}
+
+[Service]
+Type=forking
+User={{ zookeeper_user }}
+Group={{ zookeeper_group }}
+SyslogIdentifier=zookeeper
+EnvironmentFile={{ zookeeper.env_file }}
+WorkingDirectory={{ zookeeper.home_dir }}
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p {{ zookeeper.run_dir }}
+ExecStartPre=/bin/chown -R {{ zookeeper_user }}:{{ zookeeper_group }} {{ zookeeper.run_dir }}
+ExecStart={{ zookeeper.home_dir }}/bin/zkServer.sh start {{ zookeeper.conf_dir }}/zoo.cfg
+ExecStop={{ zookeeper.home_dir }}/bin/zkServer.sh stop {{ zookeeper.conf_dir }}/zoo.cfg
+PIDFile={{ zookeeper.run_dir }}/zookeeper.pid
+Restart=on-failure
+RestartSec=0s
+
+[Install]
+WantedBy=multi-user.target

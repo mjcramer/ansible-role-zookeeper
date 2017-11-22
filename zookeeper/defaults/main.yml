@@ -1,0 +1,23 @@
+# roles/zookeeper/defaults/main.yml
+---
+# Server deployment parameters - these control how zookeeper is deployed
+zookeeper_version: 3.4.10
+zookeeper_name: "zookeeper-{{ zookeeper_version }}"
+zookeeper_archive: "{{ zookeeper_name }}.tar.gz"
+zookeeper_download_path: "{{ apache_mirror }}/zookeeper/zookeeper-{{ zookeeper_version }}"
+zookeeper_download_checksum: "sha1:eb2145498c5f7a0d23650d3e0102318363206fba"
+zookeeper_user: zookeeper
+zookeeper_group: configuration
+
+# Server environment configuration - this controls how zookeeper server is run
+zookeeper_jvm_heap_init: 256m
+zookeeper_jvm_heap_max: 512m
+
+# Server configuration parameters - this controls the zookeeper server configuraiton
+zookeeper_config_id: 0
+zookeeper_config_port: "{{ zookeeper_port | default(2181) }}"
+zookeeper_config_tick_time: 2000
+zookeeper_config_init_limit: 5000
+zookeeper_config_sync_limit: 2000
+zookeeper_config_max_client_connections: 10
+

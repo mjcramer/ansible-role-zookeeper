@@ -1,0 +1,68 @@
+
+# The number of milliseconds of each tick
+tickTime={{ zookeeper_config_tick_time }}
+
+# The number of ticks that the initial 
+# synchronization phase can take
+initLimit={{ zookeeper_config_init_limit }}
+
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+syncLimit={{ zookeeper_config_sync_limit }}
+
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just 
+# example sakes.
+dataDir={{ zookeeper.lib_dir }}
+
+# the directory where the transaction log is stored
+dataLogDir={{ zookeeper.lib_dir }}
+
+# the port at which the clients will connect
+clientPort={{ zookeeper_config_port }}
+
+# the ip address at which the clients will listen
+# clientPortAddress={{ ansible_hostname }}
+
+# the maximum number of client connections.
+# increase this if you need to handle more clients
+maxClientCnxns={{ zookeeper_config_max_client_connections }}
+
+#
+# Be sure to read the maintenance section of the 
+# administrator guide before turning on autopurge.
+#
+# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
+#
+# The number of snapshots to retain in dataDir
+#autopurge.snapRetainCount=3
+
+# Purge task interval in hours
+# Set to "0" to disable auto purge feature
+#autopurge.purgeInterval=1
+
+{% if zookeeper_hosts is defined -%}
+# Cluster ensemble from 'zookeeper_hosts'...
+{% set hosts = zookeeper_hosts -%}
+{% elif zookeeper_hostgroup is defined and groups[zookeeper_hostgroup] is defined %}
+# Cluster ensemble from group '{{ zookeeper_hostgroup }}'...
+{% set hosts = groups[zookeeper_hostgroup] -%}
+{% endif -%}
+{% if hosts is defined -%}
+{% for host in hosts %}
+{%- if hostvars[host]['cluster_interface'] is defined -%}
+{%- set key = 'ansible_' + hostvars[host]['cluster_interface'] -%}
+{%- set host_ipv4 = hostvars[host][key]['ipv4'] -%}
+{%- else -%}
+{%- set host_ipv4 = hostvars[host]['ansible_default_ipv4'] -%}
+{%- endif -%}
+{% if hostvars[host]['zookeeper_config_id'] is defined %}
+server.{{ hostvars[host]['zookeeper_config_id'] }}={{ host_ipv4['address'] | default(host) }}:2888:3888
+{% else %}
+# Warning! Unable to determine the zookeeper id for the following host...
+# server.0={{ host }}:2888:3888
+{% endif -%}
+{% endfor -%}
+{% else -%}
+# No zookeeper host list or group was given...
+{% endif -%}

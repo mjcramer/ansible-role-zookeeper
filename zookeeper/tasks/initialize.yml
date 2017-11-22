@@ -1,0 +1,19 @@
+# roles/zookeeper/tasks/initialize.yml
+---
+- name: initialize | create myid
+  copy: 
+    content: "{{ zookeeper_config_id }}"
+    dest: "{{ zookeeper.lib_dir }}/myid" 
+    owner: "{{ zookeeper_user }}" 
+    group: "{{ zookeeper_group }}"
+  notify:
+    - restart zookeeper
+
+- meta: flush_handlers
+
+- name: initialize | start zookeeper
+  service: 
+    name: zookeeper
+    enabled: yes
+    state: started
+

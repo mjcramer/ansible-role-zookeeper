@@ -1,0 +1,47 @@
+# roles/zookeeper/tasks/configure.yml
+---
+# - name: configure | check cluster interface
+#   fail:
+#     msg:
+#   when:
+# if hostvars[host]['cluster_interface'] is defined -%}
+# {%- set key = 'ansible_' + hostvars[host]['cluster_interface'] -%}
+# {%- set host_ipv4 = hostvars[host][key]['ipv4'] -%}
+
+- name: configure | create exec script
+  template: 
+    src: wrapper.sh.j2 
+    dest: "{{ base_daemon_dir }}/zookeeper-service.sh"
+    mode: 0755
+
+- name: configure | create systemd configuration
+  template: 
+    src: systemd.service.j2 
+    dest: "{{ systemd_service_dir }}/zookeeper.service"
+    mode: 0644
+  register: systemd
+
+- name: configure | reload systemd
+  command: systemctl daemon-reload
+  when: systemd.changed
+
+- name: configure | create environment configuration
+  template: 
+    src: environment.j2 
+    dest: "{{ zookeeper.env_file }}"
+  notify:
+    - restart zookeeper
+
+- name: configure | create server configuration
+  template: 
+    src: zoo.cfg.j2 
+    dest: "{{ zookeeper.conf_dir }}/zoo.cfg"
+  notify:
+    - restart zookeeper
+
+- name: configure | create logging configuration
+  template: 
+    src: log4j.properties.j2 
+    dest: "{{ zookeeper.conf_dir }}/log4j.properties"
+  notify:
+    - restart zookeeper

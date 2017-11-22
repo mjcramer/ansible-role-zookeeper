@@ -1,0 +1,5 @@
+# roles/zookeeper/tasks/check.yml
+---
+- name: check | zookeeper port
+  wait_for:
+    port: "{{ zookeeper_config_port }}"
