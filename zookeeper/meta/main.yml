@@ -3,3 +3,19 @@
 dependencies:
   - role: system
   - role: java
+
+galaxy_info:
+  author: Michael Cramer
+  description: Ansible role for installing Apache Zookeeper
+  license: Unlicensed
+  min_ansible_version: 2.0
+  platforms:
+  - name: Ubuntu
+    versions:
+    - 16.04
+  - name: Centos
+    versions:
+    - 7.4
+  galaxy_tags:
+    - zookeeper
+    - installer
