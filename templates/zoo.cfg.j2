@@ -42,27 +42,28 @@ maxClientCnxns={{ zookeeper_config_max_client_connections }}
 #autopurge.purgeInterval=1
 
 {% if zookeeper_hosts is defined -%}
-# Cluster ensemble from 'zookeeper_hosts'...
-{% set hosts = zookeeper_hosts -%}
+    # Cluster ensemble from 'zookeeper_hosts'...
+    {% set hosts = zookeeper_hosts -%}
 {% elif zookeeper_hostgroup is defined and groups[zookeeper_hostgroup] is defined %}
-# Cluster ensemble from group '{{ zookeeper_hostgroup }}'...
-{% set hosts = groups[zookeeper_hostgroup] -%}
+    # Cluster ensemble from group '{{ zookeeper_hostgroup }}'...
+    {% set hosts = groups[zookeeper_hostgroup] -%}
 {% endif -%}
+
 {% if hosts is defined -%}
-{% for host in hosts %}
-{%- if hostvars[host]['cluster_interface'] is defined -%}
-{%- set key = 'ansible_' + hostvars[host]['cluster_interface'] -%}
-{%- set host_ipv4 = hostvars[host][key]['ipv4'] -%}
-{%- else -%}
-{%- set host_ipv4 = hostvars[host]['ansible_default_ipv4'] -%}
-{%- endif -%}
-{% if hostvars[host]['zookeeper_config_id'] is defined %}
-server.{{ hostvars[host]['zookeeper_config_id'] }}={{ host_ipv4['address'] | default(host) }}:2888:3888
-{% else %}
-# Warning! Unable to determine the zookeeper id for the following host...
-# server.0={{ host }}:2888:3888
-{% endif -%}
-{% endfor -%}
+    {% for host in hosts %}
+        {%- if hostvars[host]['cluster_interface'] is defined -%}
+            {%- set key = 'ansible_' + hostvars[host]['cluster_interface'] -%}
+            {%- set host_ipv4 = hostvars[host][key]['ipv4'] -%}
+        {%- else -%}
+            {%- set host_ipv4 = hostvars[host]['ansible_default_ipv4'] -%}
+        {%- endif -%}
+        {% if hostvars[host]['zookeeper_config_id'] is defined %}
+        server.{{ hostvars[host]['zookeeper_config_id'] }}={{ host_ipv4['address'] | default(host) }}:2888:3888
+        {% else %}
+        # Warning! Unable to determine the zookeeper id for the following host...
+        # server.0={{ host }}:2888:3888
+        {% endif -%}
+    {% endfor -%}
 {% else -%}
-# No zookeeper host list or group was given...
+    # No zookeeper host list or group was given...
 {% endif -%}

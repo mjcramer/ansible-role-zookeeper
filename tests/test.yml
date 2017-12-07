@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: zookeeper_hosts
+  become: yes
   roles:
     - role: ../../ansible-role-zookeeper
       sudo: yes
