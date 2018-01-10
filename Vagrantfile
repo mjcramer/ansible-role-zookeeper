@@ -1,6 +1,10 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
+if ARGV[0] =~ /^up|provision$/i and not ARGV.include?("--no-provision")
+  system("echo Running setup script... ; ./tests/setup.sh")
+end
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Base VM OS configuration.

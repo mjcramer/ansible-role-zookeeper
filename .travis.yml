@@ -2,8 +2,15 @@
 language: python
 python: "2.7"
 
+#env:
+#  - ANSIBLE_CONFIG=tests/ansible.cfg
+
 env:
-  - ANSIBLE_CONFIG=tests/ansible.cfg
+  - distribution: ubuntu
+    version: 16.04
+  - distribution: centos
+    version: 7
+
 
 before_install:
   # Make sure everything's up to date.
