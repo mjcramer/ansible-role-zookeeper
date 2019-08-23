@@ -1,11 +1,14 @@
 # roles/zookeeper/defaults/main.yml
 ---
+apache_mirror_backup: https://www-us.apache.org/dist
+
 # Server deployment parameters - these control how zookeeper is deployed
-zookeeper_version: 3.4.10
-zookeeper_name: "zookeeper-{{ zookeeper_version }}"
+zookeeper_version: 3.5.5
+zookeeper_name: "apache-zookeeper-{{ zookeeper_version }}-bin"
 zookeeper_archive: "{{ zookeeper_name }}.tar.gz"
-zookeeper_download_path: "{{ apache_mirror }}/zookeeper/zookeeper-{{ zookeeper_version }}"
-zookeeper_download_checksum: "sha1:eb2145498c5f7a0d23650d3e0102318363206fba"
+zookeeper_download_path: "zookeeper/zookeeper-{{ zookeeper_version }}"
+zookeeper_algorithm: sha512
+
 zookeeper_user: zookeeper
 zookeeper_group: configuration
 

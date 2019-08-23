@@ -1,6 +1,0 @@
----
-- hosts: zookeeper_hosts
-  become: yes
-  roles:
-    - role: ../../ansible-role-zookeeper
-      sudo: yes

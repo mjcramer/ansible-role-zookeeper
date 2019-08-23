@@ -2,8 +2,9 @@
 ---
 zookeeper:
   local_archive: "{{ download_dir }}/{{ zookeeper_archive }}"
-  remote_archive: "{{ lookup('env','ZOOKEEPER_DOWNLOAD_PATH') | default(zookeeper_download_path, true) }}/{{ zookeeper_archive }}"
-  home_dir: "{{ base_home_dir }}/{{ zookeeper_name }}"
+  remote_archive: "{{ lookup('env','ZOOKEEPER_ARCHIVE') | default(apache_mirror + '/' + zookeeper_download_path, true) }}/{{ zookeeper_archive }}"
+  remote_sha: "{{ apache_mirror_backup }}/{{ zookeeper_download_path }}/{{ zookeeper_archive }}.{{ zookeeper_algorithm }}"
+  home_dir: "{{ base_home_dir }}/zookeeper"
   link_dir: "{{ base_home_dir }}/zookeeper"
   conf_dir: "{{ base_conf_dir }}/zookeeper"
   log_dir: "{{ base_log_dir }}/zookeeper"

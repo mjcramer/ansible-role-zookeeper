@@ -31,10 +31,10 @@
   get_url:
     url: "{{ zookeeper.remote_archive }}"
     dest: "{{ zookeeper.local_archive }}"
-    checksum: "{{ zookeeper_download_checksum }}"
+    checksum: "{{ zookeeper_algorithm }}:{{ zookeeper.remote_sha }}"
     mode: 0644 
     force: no
-  when: zookeeper.remote_archive | match("^http.*$")
+  when: zookeeper.remote_archive is match("^http.*$")
   tags:
     - download
 
@@ -42,7 +42,7 @@
   copy:
     src: "{{ zookeeper.remote_archive }}"
     dest: "{{ zookeeper.local_archive }}"
-  when: zookeeper.remote_archive | match("^(?!http).*$")
+  when: zookeeper.remote_archive is match("^(?!http).*$")
 
 - name: apply | unpack archive
   unarchive: 
@@ -51,5 +51,13 @@
     owner: "{{ zookeeper_user }}"
     group: "{{ zookeeper_group }}" 
     copy: no
-    creates: "{{ zookeeper.home_dir }}"
+    creates: "{{ base_home_dir }}/{{ zookeeper_name }}"
 
+- name: apply | link home dir
+  file:
+    src: "{{ base_home_dir }}/{{ zookeeper_name }}"
+    dest: "{{ zookeeper.home_dir }}"
+    state: link
+
+- pip:
+    name: kazoo

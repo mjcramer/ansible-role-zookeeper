@@ -1,0 +1,5 @@
+---
+- name: require | check apache mirror
+  fail:
+    msg: Please set 'apache_mirror' to your closest mirror and run again
+  when: apache_mirror is not defined

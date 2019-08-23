@@ -8,11 +8,11 @@ galaxy_info:
   author: Michael Cramer
   description: Ansible role for installing Apache Zookeeper
   license: Unlicensed
-  min_ansible_version: 2.4
+  min_ansible_version: 2.8
   platforms:
   - name: Ubuntu
     versions:
-    - zesty
+    - bionic
   - name: EL
     versions:
     - 7

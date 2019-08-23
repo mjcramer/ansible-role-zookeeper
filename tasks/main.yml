@@ -1,5 +1,9 @@
 # roles/zookeeper/tasks/main.yml
 ---
+- import_tasks: require.yml
+  tags:
+    - require
+
 - import_tasks: apply.yml
   tags:
     - apply
