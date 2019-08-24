@@ -11,4 +11,5 @@ export ZOOCFGDIR
 export ZOOPIDFILE
 export ZOO_LOG_DIR
 
-su {{ zookeeper_user }} -- {{ zookeeper.home_dir }}/bin/zkServer.sh start-foreground {{ zookeeper.conf_dir }}/zoo.cfg
+command=${1:-start-foreground}
+su {{ zookeeper_user }} -c "{{ zookeeper.home_dir }}/bin/zkServer.sh $command {{ zookeeper.conf_dir }}/zoo.cfg"

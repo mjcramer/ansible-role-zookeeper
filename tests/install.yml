@@ -39,8 +39,12 @@
       become: yes
 
   tasks:
-    - debug:
-        var: zookeeper_version
+    - raw: "zookeeper-service.sh status | grep Mode"
+      register: status
+      changed_when: no
+
+    - debug: 
+        msg: "{{ status.stdout }}"
 
     - znode:
         hosts: localhost:2181
@@ -48,6 +52,7 @@
         value: zookeeper
         state: present
       run_once: yes
+      changed_when: no
 
     - znode:
         hosts: localhost:2181
@@ -59,3 +64,8 @@
         hosts: localhost:2181
         name: /ansible_test
         op: get
+      register: test
+
+    - fail:
+        msg: Unable to read correct value from znode...
+      when: test.value is not match('zookeeper')
